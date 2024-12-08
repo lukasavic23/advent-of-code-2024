@@ -58,4 +58,55 @@ const thirdMatch = getMatches(traversDiagToBR(inputData));
 const fourthMatch = getMatches(traverseDiagToTR(inputData));
 
 const result = firstMatch + secondMatch + thirdMatch + fourthMatch;
-console.log(result);
+console.log(result, "part one solution");
+
+const patterns = [
+  ["M", "M", "S", "S"],
+  ["S", "S", "M", "M"],
+  ["M", "S", "M", "S"],
+  ["S", "M", "S", "M"],
+];
+function satisfiesPattern(items, patterns) {
+  return patterns.some(
+    ([aboveLeft, aboveRight, belowLeft, belowRight]) =>
+      items[0] === aboveLeft &&
+      items[1] === aboveRight &&
+      items[2] === belowLeft &&
+      items[3] === belowRight
+  );
+}
+
+let counter = 0;
+for (let i = 0; i < inputData.length; i++) {
+  const arr = inputData[i];
+  if (i === 0 || i === inputData.length - 1) continue;
+
+  for (let j = 0; j < arr.length; j++) {
+    const lt = arr[j];
+    if (lt !== "A") continue;
+    let aboveLeft = undefined;
+    if (inputData?.[i - 1]?.[j - 1] !== undefined) {
+      aboveLeft = inputData[i - 1][j - 1];
+    }
+    let aboveRight = undefined;
+    if (inputData?.[i - 1]?.[j + 1] !== undefined) {
+      aboveRight = inputData[i - 1][j + 1];
+    }
+    let belowLeft = undefined;
+    if (inputData?.[i + 1]?.[j - 1] !== undefined) {
+      belowLeft = inputData[i + 1][j - 1];
+    }
+    let belowRight = undefined;
+    if (inputData?.[i + 1]?.[j + 1] !== undefined) {
+      belowRight = inputData[i + 1][j + 1];
+    }
+    const letters = [aboveLeft, aboveRight, belowLeft, belowRight];
+    const checkIfExits = letters.every((letter) => letter !== undefined);
+    if (!checkIfExits) continue;
+    
+    if (satisfiesPattern(letters, patterns)) {
+      counter++
+    }
+  }
+}
+console.log(counter, "part two solution");
